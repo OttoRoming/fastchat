@@ -43,7 +43,7 @@ func NewMessage(method uint16, body string) (Message, error) {
 
 func (msg *Message)validate() error {
 	if (len(msg.Body) > math.MaxUint32) {
-		return fmt.Errorf("body too large at size %d", len(msg.Body))
+		return fmt.Errorf("body can not be larger than %d", math.MaxUint32)
 	}
 
 	return nil
