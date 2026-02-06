@@ -23,7 +23,7 @@ func readBytes(conn net.Conn, count int) ([]byte, error) {
 	buffer := make([]byte, count)
 	bytesRead := 0
 
-	for bytesRead != count {
+	for bytesRead < count {
 		header := make([]byte, count)
 		n, err := conn.Read(header[bytesRead:])
 		if err != nil {
