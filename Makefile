@@ -12,5 +12,10 @@ $(BINDIR):
 fcserver: $(BINDIR)
 	go build -o $(GOBIN) ./cmd/fcserver
 
+fcmul_test:
+	go test ./pkg/fcmul/lexer
+
+test: fcmul_test
+
 clean:
 	rm -rf $(BINDIR)
