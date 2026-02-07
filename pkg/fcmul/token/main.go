@@ -47,7 +47,7 @@ func (t Token)String() string {
 		return fmt.Sprintf("String(%s)", t.Literal)
 	case Int:
 		return fmt.Sprintf("Int(%s)", t.Literal)
+	default:
+		return "Unknown"
 	}
-
-	return ""
 }
