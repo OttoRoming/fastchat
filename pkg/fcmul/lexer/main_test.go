@@ -21,3 +21,48 @@ func TestLex(t *testing.T) {
 		}, tokens)
 	}
 }
+
+func TestTrailingWhitespace(t *testing.T) {
+	tokens, err := Lex("  10  ")
+	if assert.NoError(t, err) {
+		assert.Equal(t, []token.Token{
+			token.New(token.Int, "10"),
+		}, tokens)
+	}
+}
+
+func TestMap(t *testing.T) {
+	tokens, err := Lex(`
+		{
+			"id" -> 10
+			"username" -> "Otto Roming"
+			"password" -> "passw0rd"
+			"comments" -> ["first" "second"]
+			69 -> 420
+		}
+	`)
+	if assert.NoError(t, err) {
+		assert.Equal(t, []token.Token{
+			token.New(token.OpenBrace, "{"),
+			token.New(token.String, "id"),
+			token.New(token.Arrow, "->"),
+			token.New(token.Int, "10"),
+			token.New(token.String, "username"),
+			token.New(token.Arrow, "->"),
+			token.New(token.String, "Otto Roming"),
+			token.New(token.String, "password"),
+			token.New(token.Arrow, "->"),
+			token.New(token.String, "passw0rd"),
+			token.New(token.String, "comments"),
+			token.New(token.Arrow, "->"),
+			token.New(token.OpenBracket, "["),
+			token.New(token.String, "first"),
+			token.New(token.String, "second"),
+			token.New(token.CloseBracket, "]"),
+			token.New(token.Int, "69"),
+			token.New(token.Arrow, "->"),
+			token.New(token.Int, "420"),
+			token.New(token.CloseBrace, "}"),
+		}, tokens)
+	}
+}

@@ -17,7 +17,7 @@ func isDigit(b byte) bool {
 
 func newLexer(input string) lexer {
 	return lexer {
-		source: input,
+		source: strings.TrimSpace(input),
 		position: 0,
 	}
 }
@@ -38,13 +38,18 @@ func (l *lexer)isDone() bool {
 	return l.position >= len(l.source)
 }
 
+func (l *lexer) skipWhitespace() {
+	for l.current() == ' ' || l.current() == '\t' || l.current() == '\n' || l.current() == '\r' {
+		l.advance()
+	}
+}
+
 func (l *lexer)nextToken() (token.Token, error) {
 	var tok token.Token
 
+	l.skipWhitespace()
+
 	switch l.current() {
-	// ignore whitespace
-	case ' ', '\t', '\r', '\n':
-		l.advance()
 	// single char tokens
 	case '{':
 		tok = token.New(token.OpenBrace, "{")
@@ -98,7 +103,6 @@ func Lex(source string) ([]token.Token, error) {
 
 	lexer := newLexer(source)
 	for !lexer.isDone() {
-		fmt.Printf("lexer.position: %v\n", lexer.position)
 		tok, err := lexer.nextToken()
 		if err != nil {
 			return tokens, err
