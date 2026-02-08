@@ -10,7 +10,7 @@ length bytes(u32)
 
 # TODO:
 - [x] move fcmul to use int64 instead of int
-- add booleans to fcmul
+- [ ] add booleans to fcmul
 
 # Sources
 - https://youtu.be/-U1oOmbKkx4
