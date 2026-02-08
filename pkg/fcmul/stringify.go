@@ -81,7 +81,11 @@ func stringifyMap(el element.Map, pretty bool, indent uint) string {
 		}
 
 		builder.WriteString(stringifyElement(key, pretty, indent+1))
-		builder.WriteString(" -> ")
+		if pretty {
+			builder.WriteString(" -> ")
+		} else {
+			builder.WriteString("->")
+		}
 		builder.WriteString(stringifyElement(value, pretty, indent+1))
 
 		if i != len(el)-1 {
