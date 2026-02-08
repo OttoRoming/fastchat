@@ -150,6 +150,36 @@ func unmarshalSlice(el element.Element, vv reflect.Value) error {
 	return nil
 }
 
+func unmarshalArray(el element.Element, vv reflect.Value) error {
+	if vv.Kind() != reflect.Array {
+		return fmt.Errorf("go value is not of kind array")
+	}
+
+	var elList element.List
+	switch l := el.(type) {
+	case element.List:
+		elList = l
+	default:
+		return fmt.Errorf("fcmul element is not of type list")
+	}
+
+	length := len(elList)
+
+	if vv.Len() != length {
+		return fmt.Errorf("fcmul list length is different from go array length (fcmul: %d, go: %d)", len(elList), vv.Len())
+	}
+
+	for i := range length {
+		err := unmarshalElement(elList[i], vv.Index(i))
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+
 func unmarshalElement(el element.Element, vv reflect.Value) error {
 	switch vv.Kind() {
 		case reflect.String:
@@ -164,7 +194,7 @@ func unmarshalElement(el element.Element, vv reflect.Value) error {
 		case reflect.Slice:
 			return unmarshalSlice(el, vv)
 		case reflect.Array:
-			return fmt.Errorf("not implemented")
+			return unmarshalArray(el, vv)
 		default:
 			return fmt.Errorf("unsupported value type %s", vv.Kind())
 	}

@@ -177,3 +177,37 @@ func TestUnmarshalSlice(t *testing.T){
 		assert.Equal(t, []int{1, 2, 3, 4, 5}, data)
 	}
 }
+
+func TestUnmarshalSliceWrongType(t *testing.T){
+	var data []string
+
+	err := Unmarshal("[1 2 3 4 5]", &data)
+
+	assert.Error(t, err)
+}
+
+func TestUnmarshalArray(t *testing.T){
+	var data [5]int
+
+	err := Unmarshal("[1 2 3 4 5]", &data)
+
+	if assert.NoError(t, err) {
+		assert.Equal(t, [5]int{1, 2, 3, 4, 5}, data)
+	}
+}
+
+func TestUnmarshalArrayWrongType(t *testing.T){
+	var data [5]string
+
+	err := Unmarshal("[1 2 3 4 5]", &data)
+
+	assert.Error(t, err)
+}
+
+func TestUnmarshalArrayWrongLength(t *testing.T){
+	var data [4]int
+
+	err := Unmarshal("[1 2 3 4 5]", &data)
+
+	assert.Error(t, err)
+}
