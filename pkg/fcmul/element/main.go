@@ -7,7 +7,7 @@ type Element interface {
 type String string
 func (String)elementTag() {}
 
-type Int int
+type Int int64
 func (Int)elementTag() {}
 
 type Map map[Element] Element

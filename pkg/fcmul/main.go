@@ -39,17 +39,17 @@ func unmarshalInt(el element.Element, vv reflect.Value) error {
 			return fmt.Errorf("go value is not of an int kind")
 	}
 
-	value := 0
+	var elInt element.Int
 	switch i := el.(type) {
 	case element.Int:
-		value = int(i)
+		elInt = i
 	default:
 		return fmt.Errorf("fcmul element is not of type int")
 	}
 
 	switch vv.Kind() {
 	case reflect.Int:
-		vv.SetInt(int64(value))
+		vv.SetInt(int64(elInt))
 	}
 
 	return nil

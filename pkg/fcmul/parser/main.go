@@ -109,7 +109,7 @@ func (l *parser)parseInt() (element.Int, error) {
 		return element.Int(-1), fmt.Errorf("expected int token at int element, found %s", l.current())
 	}
 
-	value, err := strconv.Atoi(l.current().Literal)
+	value, err := strconv.ParseInt(l.current().Literal, 10, 64)
 	if err != nil {
 		return element.Int(-1), fmt.Errorf("int token could not be parsed %s", err)
 	}
