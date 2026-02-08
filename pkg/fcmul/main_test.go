@@ -91,3 +91,21 @@ func TestUnmarshalStructMissingField(t *testing.T){
 
 	assert.Error(t, err)
 }
+
+func TestUnmarshalMap(t *testing.T){
+	var data map[string]string
+
+	err := Unmarshal(`
+		{
+			"Username" -> "Otto Roming"
+			"Password" -> "passw0rd"
+		}
+	`, &data)
+
+	if assert.NoError(t, err) {
+		assert.Equal(t, map[string]string{
+			"Username": "Otto Roming",
+			"Password": "passw0rd",
+		}, data)
+	}
+}

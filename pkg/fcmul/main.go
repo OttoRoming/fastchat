@@ -87,6 +87,43 @@ func unmarshalStruct(el element.Element, vv reflect.Value) error {
 	return nil
 }
 
+func unmarshalMap(el element.Element, vv reflect.Value) error {
+	if vv.Kind() != reflect.Map {
+		return fmt.Errorf("go value is not of kind map")
+	}
+
+	vt := vv.Type()
+	if vv.IsNil() {
+		vv.Set(reflect.MakeMap(vt))
+	}
+
+	var elMap element.Map
+	switch m := el.(type) {
+	case element.Map:
+		elMap = m
+	default:
+		return fmt.Errorf("fcmul element is not of type map")
+	}
+
+	for elKey, elValue  := range elMap {
+		key := reflect.New(vt.Key()).Elem()
+		err := unmarshalElement(elKey, key)
+		if err != nil {
+			return err
+		}
+
+		value := reflect.New(vt.Elem()).Elem()
+		err = unmarshalElement(elValue, value)
+		if err != nil {
+			return err
+		}
+
+		vv.SetMapIndex(key, value)
+	}
+
+	return nil
+}
+
 func unmarshalElement(el element.Element, vv reflect.Value) error {
 	switch vv.Kind() {
 		case reflect.String:
@@ -97,14 +134,13 @@ func unmarshalElement(el element.Element, vv reflect.Value) error {
 		case reflect.Struct:
 			return unmarshalStruct(el, vv)
 		case reflect.Map:
-			return fmt.Errorf("not implemented")
+			return unmarshalMap(el, vv)
 		case reflect.Array, reflect.Slice:
 			return fmt.Errorf("not implemented")
 		default:
-			return fmt.Errorf("unsupported value type")
+			return fmt.Errorf("unsupported value type %s", vv.Kind())
 	}
 }
-
 
 func Unmarshal(source string, v any) error {
 	el, err := Parse(source)
