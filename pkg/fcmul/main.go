@@ -93,9 +93,9 @@ func unmarshalMap(el element.Element, vv reflect.Value) error {
 	}
 
 	vt := vv.Type()
-	if vv.IsNil() {
-		vv.Set(reflect.MakeMap(vt))
-	}
+
+	// the map might be nil or might be filled with old stuff, remove that
+	vv.Set(reflect.MakeMap(vt))
 
 	var elMap element.Map
 	switch m := el.(type) {
@@ -124,6 +124,32 @@ func unmarshalMap(el element.Element, vv reflect.Value) error {
 	return nil
 }
 
+func unmarshalSlice(el element.Element, vv reflect.Value) error {
+	if vv.Kind() != reflect.Slice {
+		return fmt.Errorf("go value is not of kind slice")
+	}
+	vt := vv.Type()
+
+	var elList element.List
+	switch l := el.(type) {
+	case element.List:
+		elList = l
+	default:
+		return fmt.Errorf("fcmul element is not of type list")
+	}
+
+	length := len(elList)
+	vv.Set(reflect.MakeSlice(vt, length, length))
+	for i := range length {
+		err := unmarshalElement(elList[i], vv.Index(i))
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func unmarshalElement(el element.Element, vv reflect.Value) error {
 	switch vv.Kind() {
 		case reflect.String:
@@ -135,7 +161,9 @@ func unmarshalElement(el element.Element, vv reflect.Value) error {
 			return unmarshalStruct(el, vv)
 		case reflect.Map:
 			return unmarshalMap(el, vv)
-		case reflect.Array, reflect.Slice:
+		case reflect.Slice:
+			return unmarshalSlice(el, vv)
+		case reflect.Array:
 			return fmt.Errorf("not implemented")
 		default:
 			return fmt.Errorf("unsupported value type %s", vv.Kind())

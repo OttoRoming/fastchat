@@ -4,8 +4,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	// "github.com/OttoRoming/fastchat/pkg/fcmul/token"
-	// "github.com/stretchr/testify/assert"
 )
 
 func TestUnmarshalWithoutPointer(t *testing.T) {
@@ -49,6 +47,31 @@ func TestUnmarshalStruct(t *testing.T){
 		assert.Equal(t, 10, data.Id)
 		assert.Equal(t, "Otto Roming", data.Username)
 		assert.Equal(t, "passw0rd", data.Password)
+	}
+}
+
+func TestUnmarshalStructWithList(t *testing.T){
+	var data struct {
+		Id int
+		Username string
+		Password string
+		Comments []string
+	}
+
+	err := Unmarshal(`
+		{
+			"Id" -> 10
+			"Username" -> "Otto Roming"
+			"Password" -> "passw0rd"
+			"Comments" -> ["first" "second"]
+		}
+	`, &data)
+
+	if assert.NoError(t, err) {
+		assert.Equal(t, 10, data.Id)
+		assert.Equal(t, "Otto Roming", data.Username)
+		assert.Equal(t, "passw0rd", data.Password)
+		assert.Equal(t, []string{"first", "second"}, data.Comments)
 	}
 }
 
@@ -107,5 +130,50 @@ func TestUnmarshalMap(t *testing.T){
 			"Username": "Otto Roming",
 			"Password": "passw0rd",
 		}, data)
+	}
+}
+
+func TestUnmarshalPopulatedMap(t *testing.T){
+	data := map[string]string{
+		"this": "text",
+		"should": "not",
+		"be": "here",
+	}
+
+	err := Unmarshal(`
+		{
+			"Username" -> "Otto Roming"
+			"Password" -> "passw0rd"
+		}
+	`, &data)
+
+	if assert.NoError(t, err) {
+		assert.Equal(t, map[string]string{
+			"Username": "Otto Roming",
+			"Password": "passw0rd",
+		}, data)
+	}
+}
+
+func TestUnmarshalMapWrongType(t *testing.T){
+	var data map[int]int
+
+	err := Unmarshal(`
+		{
+			"Username" -> "Otto Roming"
+			"Password" -> "passw0rd"
+		}
+	`, &data)
+
+	assert.Error(t, err)
+}
+
+func TestUnmarshalSlice(t *testing.T){
+	var data []int
+
+	err := Unmarshal("[1 2 3 4 5]", &data)
+
+	if assert.NoError(t, err) {
+		assert.Equal(t, []int{1, 2, 3, 4, 5}, data)
 	}
 }
