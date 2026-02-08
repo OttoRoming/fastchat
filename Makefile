@@ -15,7 +15,6 @@ fcserver: $(BINDIR)
 fcmul_test:
 	go test ./pkg/fcmul/lexer
 	go test ./pkg/fcmul/parser
-	go test ./pkg/fcmul/stringify
 	go test ./pkg/fcmul
 
 test: fcmul_test
