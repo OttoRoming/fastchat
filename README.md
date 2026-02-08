@@ -8,6 +8,9 @@ method (u16)
 length bytes(u32)
 ```
 
+# TODO:
+- [ ] move fcmul to use int64 instead of int
+
 # Sources
 - https://youtu.be/-U1oOmbKkx4
 - https://interpreterbook.com
