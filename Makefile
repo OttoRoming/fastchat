@@ -17,7 +17,7 @@ fcmul_test:
 	go test ./pkg/fcmul/parser
 	go test ./pkg/fcmul
 
-test: fcmul_test
+test: lint fcmul_test
 
 lint:
 	golangci-lint run
