@@ -1,9 +1,7 @@
 package fcmul
 
 import (
-	"math"
 	"testing"
-	"fmt"
 
 	"github.com/stretchr/testify/assert"
 )
