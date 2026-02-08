@@ -21,16 +21,16 @@ func TestStringifyStringPretty(t *testing.T) {
 func TestStringifyMap(t *testing.T) {
 	// The way a map will get stringified is undefined and can thus not be tested directly compared to a string
 
-	el := element.Map(map[element.Element]element.Element{
+	el := element.Map{
 		element.String("id"):       element.Int(10),
 		element.String("username"): element.String("Otto Roming"),
 		element.String("password"): element.String("passw0rd"),
-		element.String("comments"): element.List([]element.Element{
+		element.String("comments"): element.List{
 			element.String("first"),
 			element.String("second"),
-		}),
+		},
 		element.Int(69): element.Int(420),
-	})
+	}
 
 	str := Stringify(el, false)
 	el2, err := parser.Parse(str)
@@ -43,16 +43,16 @@ func TestStringifyMap(t *testing.T) {
 func TestStringifyMapPretty(t *testing.T) {
 	// The way a map will get stringified is undefined and can thus not be tested directly compared to a string
 
-	el := element.Map(map[element.Element]element.Element{
+	el := element.Map{
 		element.String("id"):       element.Int(10),
 		element.String("username"): element.String("Otto Roming"),
 		element.String("password"): element.String("passw0rd"),
-		element.String("comments"): element.List([]element.Element{
+		element.String("comments"): element.List{
 			element.String("first"),
 			element.String("second"),
-		}),
+		},
 		element.Int(69): element.Int(420),
-	})
+	}
 
 	str := Stringify(el, true)
 	el2, err := parser.Parse(str)

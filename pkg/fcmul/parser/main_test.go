@@ -32,16 +32,16 @@ func TestMap(t *testing.T) {
 		}
 	`)
 	if assert.NoError(t, err) {
-		assert.Equal(t, element.Map(map[element.Element]element.Element{
+		assert.Equal(t, element.Map{
 			element.String("id"):       element.Int(10),
 			element.String("username"): element.String("Otto Roming"),
 			element.String("password"): element.String("passw0rd"),
-			element.String("comments"): element.List([]element.Element{
+			element.String("comments"): element.List{
 				element.String("first"),
 				element.String("second"),
-			}),
+			},
 			element.Int(69): element.Int(420),
-		}), el)
+		}, el)
 	}
 }
 
