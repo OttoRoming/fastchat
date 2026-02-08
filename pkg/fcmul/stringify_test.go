@@ -1,4 +1,4 @@
-package stringify
+package fcmul
 
 import (
 	"testing"
@@ -8,17 +8,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestString(t *testing.T) {
+func TestStringifyString(t *testing.T) {
 	str := Stringify(element.String("123"), false)
 	assert.Equal(t, `"123"`, str)
 }
 
-func TestStringPretty(t *testing.T) {
+func TestStringifyStringPretty(t *testing.T) {
 	str := Stringify(element.String("123"), true)
 	assert.Equal(t, `"123"`, str)
 }
 
-func TestMap(t *testing.T) {
+func TestStringifyMap(t *testing.T) {
 	// The way a map will get stringified is undefined and can thus not be tested directly compared to a string
 
 	el := element.Map(map[element.Element]element.Element{
@@ -40,7 +40,7 @@ func TestMap(t *testing.T) {
 	}
 }
 
-func TestMapPretty(t *testing.T) {
+func TestStringifyMapPretty(t *testing.T) {
 	// The way a map will get stringified is undefined and can thus not be tested directly compared to a string
 
 	el := element.Map(map[element.Element]element.Element{

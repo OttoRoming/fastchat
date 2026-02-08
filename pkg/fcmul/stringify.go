@@ -1,4 +1,4 @@
-package stringify
+package fcmul
 
 import (
 	"fmt"
