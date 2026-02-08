@@ -8,13 +8,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUnmarshalWithoutPointer(t *testing.T) {
+func TestWithoutPointer(t *testing.T) {
 	s := ""
 	err := Unmarshal(`"Hello, World"`, s)
 	assert.Error(t, err)
 }
 
-func TestUnmarshalString(t *testing.T) {
+func TestString(t *testing.T) {
 	s := ""
 	err := Unmarshal(`"Hello, World"`, &s)
 	if assert.NoError(t, err) {
@@ -22,7 +22,7 @@ func TestUnmarshalString(t *testing.T) {
 	}
 }
 
-func TestUnmarshalInt(t *testing.T) {
+func TestInt(t *testing.T) {
 	i := -1
 	err := Unmarshal("69420", &i)
 	if assert.NoError(t, err) {
@@ -30,7 +30,7 @@ func TestUnmarshalInt(t *testing.T) {
 	}
 }
 
-func TestUnmarshalInt64Bound(t *testing.T) {
+func TestInt64Bound(t *testing.T) {
 	var i int64
 	err := Unmarshal(fmt.Sprint(math.MaxInt64), &i)
 	if assert.NoError(t, err) {
@@ -38,7 +38,7 @@ func TestUnmarshalInt64Bound(t *testing.T) {
 	}
 }
 
-func TestUnmarshalStruct(t *testing.T){
+func TestStruct(t *testing.T){
 	var data struct {
 		Id int
 		Username string
@@ -60,7 +60,7 @@ func TestUnmarshalStruct(t *testing.T){
 	}
 }
 
-func TestUnmarshalStructWithList(t *testing.T){
+func TestStructWithList(t *testing.T){
 	var data struct {
 		Id int
 		Username string
@@ -85,7 +85,7 @@ func TestUnmarshalStructWithList(t *testing.T){
 	}
 }
 
-func TestUnmarshalStructUnusedField(t *testing.T){
+func TestStructUnusedField(t *testing.T){
 	var data struct {
 		Id int
 		Username string
@@ -108,7 +108,7 @@ func TestUnmarshalStructUnusedField(t *testing.T){
 	}
 }
 
-func TestUnmarshalStructMissingField(t *testing.T){
+func TestStructMissingField(t *testing.T){
 	var data struct {
 		Id int
 		Username string
@@ -125,7 +125,7 @@ func TestUnmarshalStructMissingField(t *testing.T){
 	assert.Error(t, err)
 }
 
-func TestUnmarshalMap(t *testing.T){
+func TestMap(t *testing.T){
 	var data map[string]string
 
 	err := Unmarshal(`
@@ -143,7 +143,7 @@ func TestUnmarshalMap(t *testing.T){
 	}
 }
 
-func TestUnmarshalPopulatedMap(t *testing.T){
+func TestPopulatedMap(t *testing.T){
 	data := map[string]string{
 		"this": "text",
 		"should": "not",
@@ -165,7 +165,7 @@ func TestUnmarshalPopulatedMap(t *testing.T){
 	}
 }
 
-func TestUnmarshalMapWrongType(t *testing.T){
+func TestMapWrongType(t *testing.T){
 	var data map[int]int
 
 	err := Unmarshal(`
@@ -178,7 +178,7 @@ func TestUnmarshalMapWrongType(t *testing.T){
 	assert.Error(t, err)
 }
 
-func TestUnmarshalSlice(t *testing.T){
+func TestSlice(t *testing.T){
 	var data []int
 
 	err := Unmarshal("[1 2 3 4 5]", &data)
@@ -188,7 +188,7 @@ func TestUnmarshalSlice(t *testing.T){
 	}
 }
 
-func TestUnmarshalSliceWrongType(t *testing.T){
+func TestSliceWrongType(t *testing.T){
 	var data []string
 
 	err := Unmarshal("[1 2 3 4 5]", &data)
@@ -196,7 +196,7 @@ func TestUnmarshalSliceWrongType(t *testing.T){
 	assert.Error(t, err)
 }
 
-func TestUnmarshalArray(t *testing.T){
+func TestArray(t *testing.T){
 	var data [5]int
 
 	err := Unmarshal("[1 2 3 4 5]", &data)
@@ -206,7 +206,7 @@ func TestUnmarshalArray(t *testing.T){
 	}
 }
 
-func TestUnmarshalArrayWrongType(t *testing.T){
+func TestArrayWrongType(t *testing.T){
 	var data [5]string
 
 	err := Unmarshal("[1 2 3 4 5]", &data)
@@ -214,7 +214,7 @@ func TestUnmarshalArrayWrongType(t *testing.T){
 	assert.Error(t, err)
 }
 
-func TestUnmarshalArrayWrongLength(t *testing.T){
+func TestArrayWrongLength(t *testing.T){
 	var data [4]int
 
 	err := Unmarshal("[1 2 3 4 5]", &data)
