@@ -90,6 +90,10 @@ func Parse(conn net.Conn) (Message, error) {
 
 	bodyLength := binary.BigEndian.Uint32(header[4:8])
 	bodyBytes, err := readBytes(conn, int(bodyLength))
+	if err != nil {
+		return result, err
+	}
+
 	result.Body = string(bodyBytes)
 
 	return result, nil
