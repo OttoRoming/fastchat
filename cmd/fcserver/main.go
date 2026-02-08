@@ -8,14 +8,7 @@ import (
 const (
 	// address = "localhost:4040"
 )
-// err := fcmul.Unmarshal(`
-	// 	{
-	// 		"Uwu" -> "rawr"
-	// 	}
-	// `, &test)
-	// if err != nil {
-	// 	fmt.Printf("err: %v\n", err)
-	// }
+
 
 
 // func handleConnection(conn net.Conn) {
