@@ -51,3 +51,17 @@ func TestMaxInt(t *testing.T) {
 		assert.Equal(t, element.Int(math.MaxInt64), el)
 	}
 }
+
+func TestTrue(t *testing.T) {
+	el, err := Parse("t")
+	if assert.NoError(t, err) {
+		assert.Equal(t, element.Bool(true), el)
+	}
+}
+
+func TestFalse(t *testing.T) {
+	el, err := Parse("f")
+	if assert.NoError(t, err) {
+		assert.Equal(t, element.Bool(false), el)
+	}
+}

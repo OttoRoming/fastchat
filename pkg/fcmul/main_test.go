@@ -2,6 +2,8 @@ package fcmul
 
 import (
 	"testing"
+	"fmt"
+	"math"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -28,14 +30,13 @@ func TestUnmarshalInt(t *testing.T) {
 	}
 }
 
-// FIXME: this test case is is failing for some reason
-// func TestUnmarshalInt64Bound(t *testing.T) {
-// 	var i int64
-// 	err := Unmarshal(fmt.Sprint(math.MaxInt64), &i)
-// 	if assert.NoError(t, err) {
-// 		assert.Equal(t, int64(math.MaxInt64), i)
-// 	}
-// }
+func TestUnmarshalInt64Bound(t *testing.T) {
+	var i int64
+	err := Unmarshal(fmt.Sprint(math.MaxInt64), &i)
+	if assert.NoError(t, err) {
+		assert.Equal(t, int64(math.MaxInt64), i)
+	}
+}
 
 func TestUnmarshalStruct(t *testing.T){
 	var data struct {
@@ -219,4 +220,24 @@ func TestUnmarshalArrayWrongLength(t *testing.T){
 	err := Unmarshal("[1 2 3 4 5]", &data)
 
 	assert.Error(t, err)
+}
+
+func TestTrue(t *testing.T) {
+	var data bool
+
+	err := Unmarshal("t", &data)
+
+	if assert.NoError(t, err) {
+		assert.Equal(t, true, data)
+	}
+}
+
+func TestFalse(t *testing.T) {
+	var data bool
+
+	err := Unmarshal("f", &data)
+
+	if assert.NoError(t, err) {
+		assert.Equal(t, false, data)
+	}
 }

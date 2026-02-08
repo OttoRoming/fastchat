@@ -9,6 +9,9 @@ const (
 	CloseBrace // }
 	OpenBracket // [
 	CloseBracket // ]
+	True // t
+	False // f
+
 	Arrow // ->
 
 	EndOfFile // EOF
@@ -39,6 +42,10 @@ func (t Token)String() string {
 		return fmt.Sprintf("OpenBracket(%s)", t.Literal)
 	case CloseBracket:
 		return fmt.Sprintf("CloseBracket(%s)", t.Literal)
+	case True:
+		return fmt.Sprintf("True(%s)", t.Literal)
+	case False:
+		return fmt.Sprintf("False(%s)", t.Literal)
 	case Arrow:
 		return fmt.Sprintf("Arrow(%s)", t.Literal)
 	case EndOfFile:

@@ -118,6 +118,21 @@ func (l *parser)parseInt() (element.Int, error) {
 	return element.Int(value), nil
 }
 
+func (l *parser)parseBool() (element.Bool, error) {
+	result := false
+
+	if l.current().Kind != token.True && l.current().Kind != token.False {
+		return element.Bool(result), fmt.Errorf("expected true or false token at bool element, found %s", l.current())
+	}
+
+	if l.current().Kind == token.True {
+		result = true
+	}
+	l.advance()
+
+	return element.Bool(result), nil
+}
+
 func (l *parser)parseElement() (element.Element, error) {
 	switch l.current().Kind {
 		case token.OpenBrace:
@@ -128,17 +143,19 @@ func (l *parser)parseElement() (element.Element, error) {
 			return l.parseString()
 		case token.Int:
 			return l.parseInt()
+		case token.True, token.False:
+			return l.parseBool()
 		case token.EndOfFile:
-			return element.Int(-1), fmt.Errorf("unexpected end of file")
+			return element.Bool(false), fmt.Errorf("unexpected end of file")
 		default:
-			return element.Int(-1), fmt.Errorf("unexpected token %s", l.current())
+			return element.Bool(false), fmt.Errorf("unexpected token %s", l.current())
 	}
 }
 
 func Parse(source string) (element.Element, error) {
 	parser, err := newParser(source)
 	if err != nil {
-		return element.Int(-1), err
+		return element.Bool(false), err
 	}
 
 	el, err := parser.parseElement()

@@ -75,3 +75,17 @@ func TestMaxInt(t *testing.T) {
 		assert.Equal(t, []token.Token{token.New(token.Int, fmt.Sprint(math.MaxInt64))}, tokens)
 	}
 }
+
+func TestTrue(t *testing.T) {
+	tokens, err := Lex("t")
+	if assert.NoError(t, err) {
+		assert.Equal(t, []token.Token{token.New(token.True, "t")}, tokens)
+	}
+}
+
+func TestFalse(t *testing.T) {
+	tokens, err := Lex("f")
+	if assert.NoError(t, err) {
+		assert.Equal(t, []token.Token{token.New(token.False, "f")}, tokens)
+	}
+}

@@ -4,6 +4,9 @@ type Element interface {
 	elementTag()
 }
 
+type Bool bool
+func (Bool)elementTag() {}
+
 type String string
 func (String)elementTag() {}
 

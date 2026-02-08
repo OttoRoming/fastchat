@@ -63,6 +63,12 @@ func (l *lexer)nextToken() (token.Token, error) {
 	case ']':
 		tok = token.New(token.CloseBracket, "]")
 		l.advance()
+	case 't':
+		tok = token.New(token.True, "t")
+		l.advance()
+	case 'f':
+		tok = token.New(token.False, "f")
+		l.advance()
 	// 2 char tokens
 	case '-':
 		l.advance()

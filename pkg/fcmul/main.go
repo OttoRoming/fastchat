@@ -28,6 +28,7 @@ func unmarshalString(el element.Element, vv reflect.Value) error {
 	default:
 		return fmt.Errorf("fcmul element is not of type string")
 	}
+
 	return nil
 }
 
@@ -47,10 +48,7 @@ func unmarshalInt(el element.Element, vv reflect.Value) error {
 		return fmt.Errorf("fcmul element is not of type int")
 	}
 
-	switch vv.Kind() {
-	case reflect.Int:
-		vv.SetInt(int64(elInt))
-	}
+	vv.SetInt(int64(elInt))
 
 	return nil
 }
@@ -179,6 +177,23 @@ func unmarshalArray(el element.Element, vv reflect.Value) error {
 	return nil
 }
 
+func unmarshalBool(el element.Element, vv reflect.Value) error {
+	if vv.Kind() != reflect.Bool {
+		return fmt.Errorf("go value is not of kind bool")
+	}
+
+	var elBool element.Bool
+	switch b := el.(type) {
+	case element.Bool:
+		elBool = b
+	default:
+		return fmt.Errorf("fcmul element is not of type bool")
+	}
+
+	vv.SetBool(bool(elBool))
+
+	return nil
+}
 
 func unmarshalElement(el element.Element, vv reflect.Value) error {
 	switch vv.Kind() {
@@ -195,6 +210,8 @@ func unmarshalElement(el element.Element, vv reflect.Value) error {
 			return unmarshalSlice(el, vv)
 		case reflect.Array:
 			return unmarshalArray(el, vv)
+		case reflect.Bool:
+			return unmarshalBool(el, vv)
 		default:
 			return fmt.Errorf("unsupported value type %s", vv.Kind())
 	}
