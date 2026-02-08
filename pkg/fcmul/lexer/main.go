@@ -1,13 +1,14 @@
 package lexer
 
 import (
-	"github.com/OttoRoming/fastchat/pkg/fcmul/token"
 	"fmt"
 	"strings"
+
+	"github.com/OttoRoming/fastchat/pkg/fcmul/token"
 )
 
 type lexer struct {
-	source string
+	source   string
 	position int
 }
 
@@ -16,13 +17,13 @@ func isDigit(b byte) bool {
 }
 
 func newLexer(input string) lexer {
-	return lexer {
-		source: strings.TrimSpace(input),
+	return lexer{
+		source:   strings.TrimSpace(input),
 		position: 0,
 	}
 }
 
-func (l *lexer)current() byte {
+func (l *lexer) current() byte {
 	// avoid out of bounds with a white lie
 	if l.isDone() {
 		return ' '
@@ -30,11 +31,11 @@ func (l *lexer)current() byte {
 	return l.source[l.position]
 }
 
-func (l *lexer)advance() {
-	l.position ++
+func (l *lexer) advance() {
+	l.position++
 }
 
-func (l *lexer)isDone() bool {
+func (l *lexer) isDone() bool {
 	return l.position >= len(l.source)
 }
 
@@ -44,7 +45,7 @@ func (l *lexer) skipWhitespace() {
 	}
 }
 
-func (l *lexer)nextToken() (token.Token, error) {
+func (l *lexer) nextToken() (token.Token, error) {
 	var tok token.Token
 
 	l.skipWhitespace()

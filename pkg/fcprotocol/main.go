@@ -8,8 +8,8 @@ package fcprotocol
 import (
 	"encoding/binary"
 	"fmt"
-	"net"
 	"math"
+	"net"
 )
 
 const (
@@ -18,19 +18,19 @@ const (
 )
 
 const (
-	headerLength = 8
+	headerLength   = 8
 	correctVersion = 1
 )
 
 type Message struct {
 	Method uint16
-	Body string
+	Body   string
 }
 
 func NewMessage(method uint16, body string) (Message, error) {
 	msg := Message{
 		Method: method,
-		Body: body,
+		Body:   body,
 	}
 
 	err := msg.validate()
@@ -41,15 +41,15 @@ func NewMessage(method uint16, body string) (Message, error) {
 	return msg, nil
 }
 
-func (msg *Message)validate() error {
-	if (len(msg.Body) > math.MaxUint32) {
+func (msg *Message) validate() error {
+	if len(msg.Body) > math.MaxUint32 {
 		return fmt.Errorf("body can not be larger than %d", math.MaxUint32)
 	}
 
 	return nil
 }
 
-func (msg *Message)Send(conn net.Conn) error {
+func (msg *Message) Send(conn net.Conn) error {
 	header := make([]byte, headerLength)
 	binary.BigEndian.PutUint16(header, correctVersion)
 	binary.BigEndian.PutUint16(header[2:], msg.Method)
@@ -69,7 +69,6 @@ func (msg *Message)Send(conn net.Conn) error {
 	return nil
 }
 
-
 func Parse(conn net.Conn) (Message, error) {
 	var result Message
 
@@ -79,7 +78,7 @@ func Parse(conn net.Conn) (Message, error) {
 	}
 
 	version := binary.BigEndian.Uint16(header[:2])
-	if (version != correctVersion) {
+	if version != correctVersion {
 		return result, fmt.Errorf("unsupported version %d", version)
 	}
 

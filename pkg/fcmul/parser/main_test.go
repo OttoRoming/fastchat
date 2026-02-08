@@ -1,9 +1,9 @@
 package parser
 
 import (
-	"testing"
 	"fmt"
 	"math"
+	"testing"
 
 	"github.com/OttoRoming/fastchat/pkg/fcmul/element"
 	"github.com/stretchr/testify/assert"
@@ -21,7 +21,7 @@ func TestString(t *testing.T) {
 	}
 }
 
-func TestMap(t *testing.T){
+func TestMap(t *testing.T) {
 	el, err := Parse(`
 		{
 			"id" -> 10

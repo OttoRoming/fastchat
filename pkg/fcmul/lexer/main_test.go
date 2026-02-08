@@ -1,11 +1,12 @@
 package lexer
 
 import (
-	"testing"
-	"math"
 	"fmt"
+	"math"
+	"testing"
+
 	"github.com/OttoRoming/fastchat/pkg/fcmul/token"
-    "github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestLex(t *testing.T) {

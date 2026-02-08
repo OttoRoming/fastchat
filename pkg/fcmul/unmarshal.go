@@ -1,8 +1,8 @@
 package fcmul
 
 import (
-	"reflect"
 	"fmt"
+	"reflect"
 
 	"github.com/OttoRoming/fastchat/pkg/fcmul/element"
 )
@@ -24,10 +24,10 @@ func unmarshalString(el element.Element, vv reflect.Value) error {
 
 func unmarshalInt(el element.Element, vv reflect.Value) error {
 	switch vv.Kind() {
-		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
-			 reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		default:
-			return fmt.Errorf("go value is not of an int kind")
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
+		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+	default:
+		return fmt.Errorf("go value is not of an int kind")
 	}
 
 	var elInt element.Int
@@ -44,7 +44,7 @@ func unmarshalInt(el element.Element, vv reflect.Value) error {
 }
 
 func unmarshalStruct(el element.Element, vv reflect.Value) error {
-	if vv.Kind() != reflect.Struct{
+	if vv.Kind() != reflect.Struct {
 		return fmt.Errorf("go value is not of kind struct")
 	}
 
@@ -93,7 +93,7 @@ func unmarshalMap(el element.Element, vv reflect.Value) error {
 		return fmt.Errorf("fcmul element is not of type map")
 	}
 
-	for elKey, elValue  := range elMap {
+	for elKey, elValue := range elMap {
 		key := reflect.New(vt.Key()).Elem()
 		err := unmarshalElement(elKey, key)
 		if err != nil {
@@ -187,23 +187,23 @@ func unmarshalBool(el element.Element, vv reflect.Value) error {
 
 func unmarshalElement(el element.Element, vv reflect.Value) error {
 	switch vv.Kind() {
-		case reflect.String:
-			return unmarshalString(el, vv)
-		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
-			 reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-			return unmarshalInt(el, vv)
-		case reflect.Struct:
-			return unmarshalStruct(el, vv)
-		case reflect.Map:
-			return unmarshalMap(el, vv)
-		case reflect.Slice:
-			return unmarshalSlice(el, vv)
-		case reflect.Array:
-			return unmarshalArray(el, vv)
-		case reflect.Bool:
-			return unmarshalBool(el, vv)
-		default:
-			return fmt.Errorf("unsupported value type %s", vv.Kind())
+	case reflect.String:
+		return unmarshalString(el, vv)
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
+		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		return unmarshalInt(el, vv)
+	case reflect.Struct:
+		return unmarshalStruct(el, vv)
+	case reflect.Map:
+		return unmarshalMap(el, vv)
+	case reflect.Slice:
+		return unmarshalSlice(el, vv)
+	case reflect.Array:
+		return unmarshalArray(el, vv)
+	case reflect.Bool:
+		return unmarshalBool(el, vv)
+	default:
+		return fmt.Errorf("unsupported value type %s", vv.Kind())
 	}
 }
 

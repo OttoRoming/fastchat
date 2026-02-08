@@ -10,7 +10,7 @@ import (
 )
 
 type parser struct {
-	tokens []token.Token
+	tokens   []token.Token
 	position int
 }
 
@@ -20,13 +20,13 @@ func newParser(input string) (parser, error) {
 		return parser{}, err
 	}
 
-	return parser {
-		tokens: tokens,
+	return parser{
+		tokens:   tokens,
 		position: 0,
 	}, nil
 }
 
-func (l *parser)current() token.Token {
+func (l *parser) current() token.Token {
 	// avoid out of bounds with a white lie
 	if l.isDone() {
 		return token.New(token.EndOfFile, "EOF")
@@ -34,15 +34,15 @@ func (l *parser)current() token.Token {
 	return l.tokens[l.position]
 }
 
-func (l *parser)advance() {
-	l.position ++
+func (l *parser) advance() {
+	l.position++
 }
 
-func (l *parser)isDone() bool {
+func (l *parser) isDone() bool {
 	return l.position >= len(l.tokens)
 }
 
-func (l *parser)parseMap() (element.Map, error) {
+func (l *parser) parseMap() (element.Map, error) {
 	result := element.Map(make(map[element.Element]element.Element))
 
 	if l.current().Kind != token.OpenBrace {
@@ -72,7 +72,7 @@ func (l *parser)parseMap() (element.Map, error) {
 	return result, nil
 }
 
-func (l *parser)parseList() (element.List, error) {
+func (l *parser) parseList() (element.List, error) {
 	result := element.List([]element.Element{})
 
 	if l.current().Kind != token.OpenBracket {
@@ -93,7 +93,7 @@ func (l *parser)parseList() (element.List, error) {
 	return result, nil
 }
 
-func (l *parser)parseString() (element.String, error) {
+func (l *parser) parseString() (element.String, error) {
 	result := element.String(l.current().Literal)
 
 	if l.current().Kind != token.String {
@@ -104,7 +104,7 @@ func (l *parser)parseString() (element.String, error) {
 	return result, nil
 }
 
-func (l *parser)parseInt() (element.Int, error) {
+func (l *parser) parseInt() (element.Int, error) {
 	if l.current().Kind != token.Int {
 		return element.Int(-1), fmt.Errorf("expected int token at int element, found %s", l.current())
 	}
@@ -118,7 +118,7 @@ func (l *parser)parseInt() (element.Int, error) {
 	return element.Int(value), nil
 }
 
-func (l *parser)parseBool() (element.Bool, error) {
+func (l *parser) parseBool() (element.Bool, error) {
 	result := false
 
 	if l.current().Kind != token.True && l.current().Kind != token.False {
@@ -133,22 +133,22 @@ func (l *parser)parseBool() (element.Bool, error) {
 	return element.Bool(result), nil
 }
 
-func (l *parser)parseElement() (element.Element, error) {
+func (l *parser) parseElement() (element.Element, error) {
 	switch l.current().Kind {
-		case token.OpenBrace:
-			return l.parseMap()
-		case token.OpenBracket:
-			return l.parseList()
-		case token.String:
-			return l.parseString()
-		case token.Int:
-			return l.parseInt()
-		case token.True, token.False:
-			return l.parseBool()
-		case token.EndOfFile:
-			return element.Bool(false), fmt.Errorf("unexpected end of file")
-		default:
-			return element.Bool(false), fmt.Errorf("unexpected token %s", l.current())
+	case token.OpenBrace:
+		return l.parseMap()
+	case token.OpenBracket:
+		return l.parseList()
+	case token.String:
+		return l.parseString()
+	case token.Int:
+		return l.parseInt()
+	case token.True, token.False:
+		return l.parseBool()
+	case token.EndOfFile:
+		return element.Bool(false), fmt.Errorf("unexpected end of file")
+	default:
+		return element.Bool(false), fmt.Errorf("unexpected token %s", l.current())
 	}
 }
 
