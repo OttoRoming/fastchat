@@ -203,7 +203,7 @@ func unmarshalElement(el element.Element, vv reflect.Value) error {
 	case reflect.Bool:
 		return unmarshalBool(el, vv)
 	default:
-		return fmt.Errorf("unsupported value type %s", vv.Kind())
+		return fmt.Errorf("unsupported value kind %s", vv.Kind())
 	}
 }
 
