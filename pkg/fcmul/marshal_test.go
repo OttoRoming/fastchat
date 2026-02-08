@@ -46,10 +46,10 @@ func TestMarshalStruct(t *testing.T) {
 	}
 
 	str, err := Marshal(data)
+	assert.NoError(t, err)
 
 	var data2 User
 	err = Unmarshal(str, &data2)
-
 	if assert.NoError(t, err) {
 		assert.Equal(t, data, data2)
 	}
@@ -71,10 +71,10 @@ func TestMarshalStructWithSlice(t *testing.T) {
 	}
 
 	str, err := Marshal(data)
+	assert.NoError(t, err)
 
 	var data2 User
 	err = Unmarshal(str, &data2)
-
 	if assert.NoError(t, err) {
 		assert.Equal(t, data, data2)
 	}
