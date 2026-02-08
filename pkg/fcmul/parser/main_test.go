@@ -2,24 +2,26 @@ package parser
 
 import (
 	"testing"
+	"fmt"
+	"math"
 
 	"github.com/OttoRoming/fastchat/pkg/fcmul/element"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestParseGarbage(t *testing.T) {
+func TestGarbage(t *testing.T) {
 	_, err := Parse("\"hello\"14{}[]->12")
 	assert.Error(t, err)
 }
 
-func TestParseString(t *testing.T) {
+func TestString(t *testing.T) {
 	el, err := Parse("\"123\"")
 	if assert.NoError(t, err) {
 		assert.Equal(t, element.String("123"), el)
 	}
 }
 
-func TestParseMap(t *testing.T){
+func TestMap(t *testing.T){
 	el, err := Parse(`
 		{
 			"id" -> 10
@@ -40,5 +42,12 @@ func TestParseMap(t *testing.T){
 			}),
 			element.Int(69): element.Int(420),
 		}), el)
+	}
+}
+
+func TestMaxInt(t *testing.T) {
+	el, err := Parse(fmt.Sprint(math.MaxInt64))
+	if assert.NoError(t, err) {
+		assert.Equal(t, element.Int(math.MaxInt64), el)
 	}
 }

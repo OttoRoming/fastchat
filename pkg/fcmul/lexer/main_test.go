@@ -2,6 +2,8 @@ package lexer
 
 import (
 	"testing"
+	"math"
+	"fmt"
 	"github.com/OttoRoming/fastchat/pkg/fcmul/token"
     "github.com/stretchr/testify/assert"
 )
@@ -64,5 +66,12 @@ func TestMap(t *testing.T) {
 			token.New(token.Int, "420"),
 			token.New(token.CloseBrace, "}"),
 		}, tokens)
+	}
+}
+
+func TestMaxInt(t *testing.T) {
+	tokens, err := Lex(fmt.Sprint(math.MaxInt64))
+	if assert.NoError(t, err) {
+		assert.Equal(t, []token.Token{token.New(token.Int, fmt.Sprint(math.MaxInt64))}, tokens)
 	}
 }

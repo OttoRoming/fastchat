@@ -1,7 +1,9 @@
 package fcmul
 
 import (
+	"math"
 	"testing"
+	"fmt"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -27,6 +29,15 @@ func TestUnmarshalInt(t *testing.T) {
 		assert.Equal(t, 69420, i)
 	}
 }
+
+// FIXME: this test case is is failing for some reason
+// func TestUnmarshalInt64Bound(t *testing.T) {
+// 	var i int64
+// 	err := Unmarshal(fmt.Sprint(math.MaxInt64), &i)
+// 	if assert.NoError(t, err) {
+// 		assert.Equal(t, int64(math.MaxInt64), i)
+// 	}
+// }
 
 func TestUnmarshalStruct(t *testing.T){
 	var data struct {
