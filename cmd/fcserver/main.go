@@ -2,14 +2,13 @@ package main
 
 import (
 	"fmt"
-	"math"
+
+	"github.com/OttoRoming/fastchat/pkg/fcmul"
 )
 
 const (
-	// address = "localhost:4040"
+// address = "localhost:4040"
 )
-
-
 
 // func handleConnection(conn net.Conn) {
 // 	defer conn.Close()
@@ -22,13 +21,13 @@ const (
 // 	fmt.Printf("msg: %v\n", msg)
 // }
 
-
 func main() {
-	value := ""
-	// fcmul.Unmarshal(`"test"`, &value)
-	fmt.Printf("value: %v\n", value)
+	data, err := fcmul.Parse(`{"hello" -> "world"}`)
+	if err != nil {
+		panic(err)
+	}
 
-	fmt.Printf("math.MaxInt64: %s\n", fmt.Sprint(math.MaxInt64))
+	fmt.Printf("data: %v\n", data)
 
 	// listener, err := net.Listen("tcp", address)
 	// if err != nil {
