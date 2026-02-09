@@ -61,6 +61,8 @@ func (ErrUsernameInUse) method() uint16 {
 
 // Chat related messages
 type ReqSendMessage struct {
+	Token string
+
 	ID      string
 	To      string
 	Content string
@@ -80,6 +82,8 @@ func (AckMessageSent) method() uint16 {
 
 // Chat history related emthods
 type ReqGetHistory struct {
+	Token string
+
 	With string
 }
 
