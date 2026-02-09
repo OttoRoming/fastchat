@@ -4,13 +4,16 @@ GITIGNORE := .gitignore
 
 .PHONY: all fcserver clean
 
-all: lint fcserver
+all: lint fcserver fcclient
 
 $(BINDIR):
 	mkdir -p $(BINDIR)
 
 fcserver: $(BINDIR)
 	go build -o $(GOBIN) ./cmd/fcserver
+
+fcclient: $(BINDIR)
+	go build -o $(GOBIN) ./cmd/fcclient
 
 fcmul_test:
 	go test ./pkg/fcmul/lexer
