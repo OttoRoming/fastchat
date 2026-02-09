@@ -71,7 +71,7 @@ func (ReqSendMessage) method() uint16 {
 }
 
 type AckMessageSent struct {
-	id string
+	ID string
 }
 
 func (AckMessageSent) method() uint16 {
@@ -80,7 +80,7 @@ func (AckMessageSent) method() uint16 {
 
 // Chat history related emthods
 type ReqGetHistory struct {
-	with string
+	With string
 }
 
 func (ReqGetHistory) method() uint16 {
