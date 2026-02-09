@@ -46,7 +46,7 @@ func (ReqLogin) method() uint16 {
 }
 
 type AckSignedIn struct {
-	token string
+	Token string
 }
 
 func (AckSignedIn) method() uint16 {
@@ -61,9 +61,9 @@ func (ErrUsernameInUse) method() uint16 {
 
 // Chat related messages
 type ReqSendMessage struct {
-	id      string
-	to      string
-	content string
+	ID      string
+	To      string
+	Content string
 }
 
 func (ReqSendMessage) method() uint16 {
@@ -88,9 +88,9 @@ func (ReqGetHistory) method() uint16 {
 }
 
 type AckHistory struct {
-	chats []struct {
-		to      string
-		content string
+	Chats []struct {
+		To      string
+		Content string
 	}
 }
 
