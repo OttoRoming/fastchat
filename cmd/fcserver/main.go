@@ -53,6 +53,9 @@ func handleConnection(conn net.Conn) {
 }
 
 func main() {
+	loadDB()
+	defer db.Close()
+
 	listener, err := net.Listen("tcp", address)
 	if err != nil {
 		log.Fatal(err)

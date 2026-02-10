@@ -5,6 +5,8 @@ go 1.25.6
 require (
 	github.com/charmbracelet/huh v0.8.0
 	github.com/charmbracelet/log v0.4.2
+	github.com/jmoiron/sqlx v1.4.0
+	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/stretchr/testify v1.11.1
 )
 
