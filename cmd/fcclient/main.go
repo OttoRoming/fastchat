@@ -1,15 +1,12 @@
 package main
 
 import (
-	"github.com/charmbracelet/huh"
-	"github.com/charmbracelet/log"
-)
+	"log"
+	"net"
 
-type model struct {
-	choices  []string         // items on the to-do list
-	cursor   int              // which to-do list item our cursor is pointing at
-	selected map[int]struct{} // which to-do items are selected
-}
+	"github.com/OttoRoming/fastchat/pkg/fcprotocol"
+	"github.com/charmbracelet/huh"
+)
 
 const (
 	colorBg0     = "#1d1d1d"
@@ -57,8 +54,22 @@ func selectUser() error {
 }
 
 func main() {
-	err := login()
+	conn, err := net.Dial("tcp", "localhost:4040")
+
+	err = fcprotocol.SendMessage(fcprotocol.ReqUptime{}, conn)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// msg, err := fcprotocol.ReadMessage(conn)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// fmt.Printf("msg: %v\n", msg)
+
+	// err := login()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 }

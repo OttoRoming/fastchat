@@ -16,7 +16,7 @@ import (
 
 const (
 	headerLength   = 8
-	correctVersion = 1
+	correctVersion = 0
 )
 
 type packet struct {
@@ -53,9 +53,9 @@ func (msg *packet) validate() error {
 
 func (msg *packet) send(conn net.Conn) error {
 	header := make([]byte, headerLength)
-	binary.BigEndian.PutUint16(header, correctVersion)
-	binary.BigEndian.PutUint16(header[2:], msg.Method)
-	binary.BigEndian.PutUint32(header[4:], uint32(len(msg.Body)))
+	binary.BigEndian.PutUint16(header[0:2], correctVersion)
+	binary.BigEndian.PutUint16(header[2:4], msg.Method)
+	binary.BigEndian.PutUint32(header[4:8], uint32(len(msg.Body)))
 
 	err := writeBytes(conn, header)
 	if err != nil {
@@ -79,7 +79,7 @@ func readPacket(conn net.Conn) (packet, error) {
 		return result, err
 	}
 
-	version := binary.BigEndian.Uint16(header[:2])
+	version := binary.BigEndian.Uint16(header[0:2])
 	if version != correctVersion {
 		return result, fmt.Errorf("unsupported version %d", version)
 	}
@@ -96,6 +96,55 @@ func readPacket(conn net.Conn) (packet, error) {
 	}
 
 	result.Body = string(bodyBytes)
+
+	return result, nil
+}
+
+func ReadMessage(conn net.Conn) (Message, error) {
+	packet, err := readPacket(conn)
+	if err != nil {
+		return nil, err
+	}
+
+	var result Message
+
+	switch packet.Method {
+	case methodReqUptime:
+		result = &ReqUptime{}
+	case methodAckUptime:
+		result = &AckUptime{}
+	case methodReqSignUp:
+		result = &ReqSignUp{}
+	case methodReqLogIn:
+		result = &ReqLogin{}
+	case methodAckSignedin:
+		result = &AckSignedIn{}
+	case methodErrUsernameInUse:
+		result = ErrUsernameInUse{}
+	case methodReqSendChat:
+		result = &ReqSendMessage{}
+	case methodAckChatSent:
+		result = &AckMessageSent{}
+	case methodReqGetHistory:
+		result = &ReqGetHistory{}
+	case methodAckHistory:
+		result = &AckHistory{}
+	case methodErrAccountNotInUse:
+		result = ErrAccountNotInUse{}
+	case methodErrFailedRead:
+		result = &ErrFailedRead{}
+	default:
+		return nil, fmt.Errorf("unsupported method: %d", packet.Method)
+	}
+
+	if packet.Body == "" {
+		return nil, fmt.Errorf("empty body")
+	}
+
+	err = fcmul.Unmarshal(packet.Body, result)
+	if err != nil {
+		return nil, err
+	}
 
 	return result, nil
 }
