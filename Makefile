@@ -2,7 +2,7 @@ BINDIR := bin
 GOBIN := $(BINDIR)/$(SERVER)
 GITIGNORE := .gitignore
 
-.PHONY: all fcserver clean
+.PHONY: all fcserver fcclient clean test lint fcmul_test
 
 all: lint fcserver fcclient
 
@@ -21,6 +21,10 @@ fcmul_test:
 	go test ./pkg/fcmul
 
 test: lint fcmul_test
+
+bench: fcdb_bench
+
+examples: fcdb_examples
 
 lint:
 	golangci-lint run

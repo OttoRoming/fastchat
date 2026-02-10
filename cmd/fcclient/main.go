@@ -1,11 +1,13 @@
 package main
 
 import (
-	"log"
+	"errors"
+	"fmt"
 	"net"
 
 	"github.com/OttoRoming/fastchat/pkg/fcprotocol"
 	"github.com/charmbracelet/huh"
+	"github.com/charmbracelet/log"
 )
 
 const (
@@ -18,7 +20,7 @@ const (
 
 func login() error {
 	const (
-		signIn = "Sign in"
+		signIn = "Sign up"
 		logIn  = "Log in"
 	)
 
@@ -54,22 +56,35 @@ func selectUser() error {
 }
 
 func main() {
+	var disclaimerConfirm bool
+	huh.NewConfirm().
+		Title("All traffic (including passwords) are unencrypted. Your traffic using this application will most likely be caputerd and analyzed by your ISP, government agencies, your network administrator and more. Are you sure?").
+		Affirmative("Yes!").
+		Negative("No.").
+		Value(&disclaimerConfirm).Run()
+
+	if !disclaimerConfirm {
+		log.Info("disclaimer not confirmed, exiting")
+		return
+	}
+
 	conn, err := net.Dial("tcp", "localhost:4040")
 
-	err = fcprotocol.SendMessage(fcprotocol.ReqUptime{}, conn)
+	message := fcprotocol.ReqUptime{}
+	err = fcprotocol.SendMessage(message, conn)
+	if err != nil {
+		log.Fatal("failed to send message", "err", err)
+	}
+	log.Info("message sent", "message", message)
+
+	err = errors.New("")
+	var msg fcprotocol.Message
+	msg, err = fcprotocol.ReadMessage(conn)
+
+	fmt.Printf("msg: %v\n", msg)
+
+	err = login()
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// msg, err := fcprotocol.ReadMessage(conn)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// fmt.Printf("msg: %v\n", msg)
-
-	// err := login()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 }

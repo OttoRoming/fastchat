@@ -6,8 +6,25 @@
 
 ```
 version (u16)
+flags (u16)
+  - is response
+  - unused
+  - unused
+  - unused
+  - unused
+  - unused
+  - unused
+  - unused
+  - unused
+  - unused
+  - unused
+  - unused
+  - unused
+  - unused
+  - unused
+  - unused
 method (u16)
-length bytes(u32)
+length bytes (u32)
 ```
 
 # TODO:

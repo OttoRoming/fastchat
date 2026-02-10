@@ -15,6 +15,18 @@ const (
 
 var (
 	startTime time.Time
+	data      struct {
+		Users []struct {
+			Username string
+			Possword string
+		}
+
+		Chats []struct {
+			From    string
+			To      string
+			Content string
+		}
+	}
 )
 
 func init() {
@@ -30,25 +42,28 @@ func getUptimeFormatted() string {
 }
 
 func handleConnection(conn net.Conn) {
-	defer conn.Close()
-
-	msg, err := fcprotocol.ReadMessage(conn)
+	message, err := fcprotocol.ReadMessage(conn)
 	if err != nil {
 		log.Warn("failed to read message", "err", err)
 		return
 	}
 
-	if !msg.Confidential() {
-		log.Info("message received", "msg", msg)
+	if !message.Confidential() {
+		log.Info("message received", "message", message)
 	}
 
-	switch msg.(type) {
-	case fcprotocol.ReqUptime:
+	switch message.(type) {
+	case *fcprotocol.ReqUptime:
+		log.Info("message got requptime")
 		response := fcprotocol.AckUptime{
 			Uptime: getUptimeFormatted(),
 		}
 
-		fcprotocol.SendMessage(response, conn)
+		err := fcprotocol.SendMessage(response, conn)
+		if err != nil {
+			log.Warn("failed to send message", "err", err)
+		}
+		log.Info("message sent", "message", response)
 	}
 }
 
@@ -62,8 +77,7 @@ func main() {
 	}
 
 	elapsed := time.Since(startTime)
-	log.Info("Server started in", "microseconds", elapsed.Microseconds())
-	log.Info("Listening for fcprotocol messages on", "address", address)
+	log.Info("Server started", "time (µs)", elapsed.Microseconds(), "address", address)
 
 	for {
 		conn, err := listener.Accept()
