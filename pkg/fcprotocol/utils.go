@@ -4,6 +4,7 @@ import (
 	"net"
 )
 
+// writeBytes writes the entire buffer to the connection.
 func writeBytes(conn net.Conn, buffer []byte) error {
 	bytesWritten := 0
 
@@ -19,15 +20,15 @@ func writeBytes(conn net.Conn, buffer []byte) error {
 	return nil
 }
 
+// readBytes reads the specified number of bytes from the connection.
 func readBytes(conn net.Conn, count int) ([]byte, error) {
 	buffer := make([]byte, count)
 	bytesRead := 0
 
 	for bytesRead < count {
-		header := make([]byte, count)
-		n, err := conn.Read(header[bytesRead:])
+		n, err := conn.Read(buffer[bytesRead:])
 		if err != nil {
-			return header, err
+			return buffer, err
 		}
 
 		bytesRead += n

@@ -3,6 +3,7 @@ Fast Chat Protocol
 
 Provides utilities for creating, sending, and receiving messages
 */
+
 package fcprotocol
 
 import (
@@ -16,7 +17,7 @@ import (
 
 const (
 	headerLength   = 8
-	correctVersion = 0
+	correctVersion = 1
 )
 
 type packet struct {
@@ -24,6 +25,7 @@ type packet struct {
 	Body   string
 }
 
+// packageMessage packages a message into a packet
 func packageMessage(msg Message) (packet, error) {
 	body, err := fcmul.Marshal(msg)
 	if err != nil {
@@ -43,6 +45,7 @@ func packageMessage(msg Message) (packet, error) {
 	return packet, nil
 }
 
+// validate validates a pacekt as being correct
 func (msg *packet) validate() error {
 	if len(msg.Body) > math.MaxUint32 {
 		return fmt.Errorf("body can not be larger than %d", math.MaxUint32)
@@ -51,6 +54,7 @@ func (msg *packet) validate() error {
 	return nil
 }
 
+// send sends the packet on the connection
 func (msg *packet) send(conn net.Conn) error {
 	header := make([]byte, headerLength)
 	binary.BigEndian.PutUint16(header[0:2], correctVersion)
@@ -71,6 +75,7 @@ func (msg *packet) send(conn net.Conn) error {
 	return nil
 }
 
+// readPacket reads a packet from the connection
 func readPacket(conn net.Conn) (packet, error) {
 	var result packet
 
@@ -97,9 +102,15 @@ func readPacket(conn net.Conn) (packet, error) {
 
 	result.Body = string(bodyBytes)
 
+	err = result.validate()
+	if err != nil {
+		return result, err
+	}
+
 	return result, nil
 }
 
+// ReadMessage reads a message from the connection
 func ReadMessage(conn net.Conn) (Message, error) {
 	packet, err := readPacket(conn)
 	if err != nil {
@@ -149,6 +160,7 @@ func ReadMessage(conn net.Conn) (Message, error) {
 	return result, nil
 }
 
+// SendMessage sends a message on the connection
 func SendMessage(msg Message, conn net.Conn) error {
 	packet, err := packageMessage(msg)
 	if err != nil {
@@ -162,3 +174,6 @@ func SendMessage(msg Message, conn net.Conn) error {
 
 	return nil
 }
+
+func
+kkkkkkkkkkk
