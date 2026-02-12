@@ -28,4 +28,6 @@ func loadDB() error {
 	}
 
 	db.MustExec(schema)
+
+	return nil
 }

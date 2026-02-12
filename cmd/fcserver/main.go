@@ -53,9 +53,9 @@ func handleConnection(conn net.Conn) {
 	}
 
 	switch message.(type) {
-	case *fcprotocol.ReqUptime:
+	case *fcprotocol.RequestUptime:
 		log.Info("message got requptime")
-		response := fcprotocol.AckUptime{
+		response := fcprotocol.ResponseUptime{
 			Uptime: getUptimeFormatted(),
 		}
 

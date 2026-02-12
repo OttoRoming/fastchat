@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"net"
 
@@ -70,14 +69,13 @@ func main() {
 
 	conn, err := net.Dial("tcp", "localhost:4040")
 
-	message := fcprotocol.ReqUptime{}
+	message := fcprotocol.RequestUptime{}
 	err = fcprotocol.SendMessage(message, conn)
 	if err != nil {
 		log.Fatal("failed to send message", "err", err)
 	}
 	log.Info("message sent", "message", message)
 
-	err = errors.New("")
 	var msg fcprotocol.Message
 	msg, err = fcprotocol.ReadMessage(conn)
 

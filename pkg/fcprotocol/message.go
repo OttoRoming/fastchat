@@ -7,181 +7,177 @@ type Message interface {
 
 const (
 	// Uptime related methods
-	methodReqUptime uint16 = iota
-	methodAckUptime
+	requestUptime uint16 = iota
+	responseUptime
 
 	// Account related methods
-	methodReqSignUp
-	methodReqLogIn
-	methodAckSignedin
-	methodErrUsernameInUse
+	requestSignUp
+	requestLogIn
+	responseSignedIn
+	errorUsernameTaken
 
 	// Chat related methods
-	methodReqSendChat
-	methodAckChatSent
+	requestSendChat
+	responseChatSent
 
 	// Chat history related methods
-	methodReqGetHistory
-	methodAckHistory
+	requestChatHistory
+	responseChatHistory
 
 	// Generic
-	methodErrAccountNotInUse
-	methodErrFailedRead
-
-	methodLimit
+	errorAccountNotFound
+	errorFailedRead
 )
 
 // Uptime related messages
-type ReqUptime struct{}
+type RequestUptime struct{}
 
-func (ReqUptime) method() uint16 {
-	return methodReqUptime
+func (RequestUptime) method() uint16 {
+	return requestUptime
 }
 
-func (ReqUptime) Confidential() bool {
+func (RequestUptime) Confidential() bool {
 	return false
 }
 
-type AckUptime struct {
+type ResponseUptime struct {
 	Uptime string
 }
 
-func (AckUptime) method() uint16 {
-	return methodAckUptime
+func (ResponseUptime) method() uint16 {
+	return responseUptime
 }
 
-func (AckUptime) Confidential() bool {
+func (ResponseUptime) Confidential() bool {
 	return false
 }
 
 // Account related messages
 
-type ReqSignUp struct {
+type RequestSignUp struct {
 	Username string
 	Password string
 }
 
-func (ReqSignUp) method() uint16 {
-	return methodReqSignUp
+func (RequestSignUp) method() uint16 {
+	return requestSignUp
 }
 
-func (ReqSignUp) Confidential() bool {
+func (RequestSignUp) Confidential() bool {
 	return true
 }
 
-type ReqLogin struct {
+type RequestLogin struct {
 	Username string
 	Password string
 }
 
-func (ReqLogin) method() uint16 {
-	return methodReqLogIn
+func (RequestLogin) method() uint16 {
+	return requestLogIn
 }
 
-func (ReqLogin) Confidential() bool {
+func (RequestLogin) Confidential() bool {
 	return true
 }
 
-type AckSignedIn struct {
+type ResponseSignedIn struct {
 	Token string
 }
 
-func (AckSignedIn) method() uint16 {
-	return methodAckSignedin
+func (ResponseSignedIn) method() uint16 {
+	return responseSignedIn
 }
 
-func (AckSignedIn) Confidential() bool {
+func (ResponseSignedIn) Confidential() bool {
 	return false
 }
 
-type ErrUsernameInUse struct{}
+type ErrorUsernameTaken struct{}
 
-func (ErrUsernameInUse) method() uint16 {
-	return methodErrUsernameInUse
+func (ErrorUsernameTaken) method() uint16 {
+	return errorUsernameTaken
 }
 
-func (ErrUsernameInUse) Confidential() bool {
+func (ErrorUsernameTaken) Confidential() bool {
 	return false
 }
 
 // Chat related messages
-type ReqSendMessage struct {
+type RequestSendChat struct {
 	Token string
 
-	ID      string
 	To      string
 	Content string
 }
 
-func (ReqSendMessage) method() uint16 {
-	return methodReqSendChat
+func (RequestSendChat) method() uint16 {
+	return requestSendChat
 }
 
-func (ReqSendMessage) Confidential() bool {
+func (RequestSendChat) Confidential() bool {
 	return false
 }
 
-type AckMessageSent struct {
-	ID string
+type ResponseMessageSent struct {
 }
 
-func (AckMessageSent) method() uint16 {
-	return methodAckChatSent
+func (ResponseMessageSent) method() uint16 {
+	return responseChatSent
 }
 
-func (AckMessageSent) Confidential() bool {
+func (ResponseMessageSent) Confidential() bool {
 	return false
 }
 
 // Chat history related emthods
-type ReqGetHistory struct {
+type RequestChatHistory struct {
 	Token string
 
-	With string
+	To string
 }
 
-func (ReqGetHistory) method() uint16 {
-	return methodReqGetHistory
+func (RequestChatHistory) method() uint16 {
+	return requestChatHistory
 }
 
-func (ReqGetHistory) Confidential() bool {
+func (RequestChatHistory) Confidential() bool {
 	return false
 }
 
-type AckHistory struct {
+type ResponseChatHistory struct {
 	Chats []struct {
 		To      string
 		Content string
 	}
 }
 
-func (AckHistory) method() uint16 {
-	return methodAckHistory
+func (ResponseChatHistory) method() uint16 {
+	return responseChatHistory
 }
 
-func (AckHistory) Confidential() bool {
+func (ResponseChatHistory) Confidential() bool {
 	return false
 }
 
 // Generic
-type ErrAccountNotInUse struct{}
+type ErrorAccountNotFound struct{}
 
-func (ErrAccountNotInUse) method() uint16 {
-	return methodErrAccountNotInUse
+func (ErrorAccountNotFound) method() uint16 {
+	return errorAccountNotFound
 }
 
-func (ErrAccountNotInUse) Confidential() bool {
+func (ErrorAccountNotFound) Confidential() bool {
 	return false
 }
 
-type ErrFailedRead struct {
+type ErrorFailedRead struct {
 	Message string
 }
 
-func (ErrFailedRead) method() uint16 {
-	return methodErrFailedRead
+func (ErrorFailedRead) method() uint16 {
+	return errorFailedRead
 }
 
-func (ErrFailedRead) Confidential() bool {
+func (ErrorFailedRead) Confidential() bool {
 	return false
 }

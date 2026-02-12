@@ -1,6 +1,6 @@
 create table account (
     id integer primary key not null,
-    username text not null,
+    username text unique not null,
     password text not null
 );
 

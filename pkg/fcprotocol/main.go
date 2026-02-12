@@ -90,9 +90,6 @@ func readPacket(conn net.Conn) (packet, error) {
 	}
 
 	result.Method = binary.BigEndian.Uint16(header[2:4])
-	if result.Method >= methodLimit {
-		return result, fmt.Errorf("invalid method %d", result.Method)
-	}
 
 	bodyLength := binary.BigEndian.Uint32(header[4:8])
 	bodyBytes, err := readBytes(conn, int(bodyLength))
@@ -120,30 +117,30 @@ func ReadMessage(conn net.Conn) (Message, error) {
 	var result Message
 
 	switch packet.Method {
-	case methodReqUptime:
-		result = &ReqUptime{}
-	case methodAckUptime:
-		result = &AckUptime{}
-	case methodReqSignUp:
-		result = &ReqSignUp{}
-	case methodReqLogIn:
-		result = &ReqLogin{}
-	case methodAckSignedin:
-		result = &AckSignedIn{}
-	case methodErrUsernameInUse:
-		result = ErrUsernameInUse{}
-	case methodReqSendChat:
-		result = &ReqSendMessage{}
-	case methodAckChatSent:
-		result = &AckMessageSent{}
-	case methodReqGetHistory:
-		result = &ReqGetHistory{}
-	case methodAckHistory:
-		result = &AckHistory{}
-	case methodErrAccountNotInUse:
-		result = ErrAccountNotInUse{}
-	case methodErrFailedRead:
-		result = &ErrFailedRead{}
+	case requestUptime:
+		result = &RequestUptime{}
+	case responseUptime:
+		result = &ResponseUptime{}
+	case requestSignUp:
+		result = &RequestSignUp{}
+	case requestLogIn:
+		result = &RequestLogin{}
+	case responseSignedIn:
+		result = &ResponseSignedIn{}
+	case errorUsernameTaken:
+		result = ErrorUsernameTaken{}
+	case requestSendChat:
+		result = &RequestSendChat{}
+	case responseChatSent:
+		result = &ResponseMessageSent{}
+	case requestChatHistory:
+		result = &RequestChatHistory{}
+	case responseChatHistory:
+		result = &ResponseChatHistory{}
+	case errorAccountNotFound:
+		result = ErrorAccountNotFound{}
+	case errorFailedRead:
+		result = &ErrorFailedRead{}
 	default:
 		return nil, fmt.Errorf("unsupported method: %d", packet.Method)
 	}
