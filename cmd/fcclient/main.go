@@ -69,7 +69,7 @@ func main() {
 
 	conn, err := net.Dial("tcp", "localhost:4040")
 
-	message := fcprotocol.RequestUptime{}
+	message := fcprotocol.RequestMOTD{}
 	err = fcprotocol.SendMessage(message, conn)
 	if err != nil {
 		log.Fatal("failed to send message", "err", err)

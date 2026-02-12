@@ -118,29 +118,25 @@ func ReadMessage(conn net.Conn) (Message, error) {
 
 	switch packet.Method {
 	case requestUptime:
-		result = &RequestUptime{}
-	case responseUptime:
-		result = &ResponseUptime{}
+		result = &RequestMOTD{}
 	case requestSignUp:
 		result = &RequestSignUp{}
 	case requestLogIn:
 		result = &RequestLogin{}
-	case responseSignedIn:
-		result = &ResponseSignedIn{}
-	case errorUsernameTaken:
-		result = ErrorUsernameTaken{}
 	case requestSendChat:
 		result = &RequestSendChat{}
-	case responseChatSent:
-		result = &ResponseMessageSent{}
 	case requestChatHistory:
 		result = &RequestChatHistory{}
+	case responseMOTD:
+		result = &ResponseMOTD{}
+	case responseSignedIn:
+		result = &ResponseSignedIn{}
+	case responseChatSent:
+		result = &ResponseMessageSent{}
 	case responseChatHistory:
 		result = &ResponseChatHistory{}
-	case errorAccountNotFound:
-		result = ErrorAccountNotFound{}
-	case errorFailedRead:
-		result = &ErrorFailedRead{}
+	case responseError:
+		result = &ResponseError{}
 	default:
 		return nil, fmt.Errorf("unsupported method: %d", packet.Method)
 	}
@@ -172,5 +168,42 @@ func SendMessage(msg Message, conn net.Conn) error {
 	return nil
 }
 
-func
-kkkkkkkkkkk
+// Request sends a request message to the server and returns a response
+func SendRequest(request Request, conn net.Conn) (Response, error) {
+	err := SendMessage(request, conn)
+	if err != nil {
+		return nil, err
+	}
+
+	msg, err := ReadMessage(conn)
+	if err != nil {
+		return nil, err
+	}
+
+	response, ok := msg.(Response)
+	if !ok {
+		return nil, fmt.Errorf("unexpected message type %T", msg)
+	}
+
+	return response, nil
+}
+
+// HandleRequest handle a request with a provided function
+func HandleRequest(handler func(request Request) Response, conn net.Conn) {
+	msg, err := ReadMessage(conn)
+	if err != nil {
+		return
+	}
+
+	request, ok := msg.(Request)
+	if !ok {
+		return
+	}
+
+	response := handler(request)
+
+	err = SendMessage(response, conn)
+	if err != nil {
+		return
+	}
+}

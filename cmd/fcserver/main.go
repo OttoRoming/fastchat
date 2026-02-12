@@ -41,29 +41,26 @@ func getUptimeFormatted() string {
 	return formattedString
 }
 
+func handleRequest(request fcprotocol.Request) fcprotocol.Response {
+	if !request.Confidential() {
+		log.Info("received request", "request", request)
+	}
+
+	switch request.(type) {
+	case *fcprotocol.RequestMOTD:
+		return fcprotocol.ResponseMOTD{
+			MOTD: "Welcome to the fcserver",
+		}
+	default:
+		return fcprotocol.ResponseError{
+			Message: "unknown request method",
+		}
+	}
+}
+
 func handleConnection(conn net.Conn) {
-	message, err := fcprotocol.ReadMessage(conn)
-	if err != nil {
-		log.Warn("failed to read message", "err", err)
-		return
-	}
-
-	if !message.Confidential() {
-		log.Info("message received", "message", message)
-	}
-
-	switch message.(type) {
-	case *fcprotocol.RequestUptime:
-		log.Info("message got requptime")
-		response := fcprotocol.ResponseUptime{
-			Uptime: getUptimeFormatted(),
-		}
-
-		err := fcprotocol.SendMessage(response, conn)
-		if err != nil {
-			log.Warn("failed to send message", "err", err)
-		}
-		log.Info("message sent", "message", response)
+	for {
+		fcprotocol.HandleRequest(handleRequest, conn)
 	}
 }
 

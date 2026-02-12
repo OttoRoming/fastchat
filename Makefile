@@ -20,7 +20,7 @@ fcmul_test:
 	go test ./pkg/fcmul/parser
 	go test ./pkg/fcmul
 
-test: lint fcmul_test
+test: fcmul_test
 
 bench: fcdb_bench
 

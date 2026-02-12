@@ -1,56 +1,63 @@
 package fcprotocol
 
+import "math"
+
 type Message interface {
 	method() uint16
 	Confidential() bool
 }
 
-const (
-	// Uptime related methods
-	requestUptime uint16 = iota
-	responseUptime
+type Request interface {
+	Message
+	requestTag()
+}
 
-	// Account related methods
+type Response interface {
+	Message
+	responseTag()
+}
+
+const (
+	requestUptime uint16 = iota
 	requestSignUp
 	requestLogIn
-	responseSignedIn
-	errorUsernameTaken
-
-	// Chat related methods
 	requestSendChat
-	responseChatSent
-
-	// Chat history related methods
 	requestChatHistory
+
+	responseMOTD uint16 = 1<<15 + iota
+	responseSignedIn
+	responseChatSent
 	responseChatHistory
 
-	// Generic
-	errorAccountNotFound
-	errorFailedRead
+	responseError = math.MaxUint16
 )
 
 // Uptime related messages
-type RequestUptime struct{}
+type RequestMOTD struct{}
 
-func (RequestUptime) method() uint16 {
+func (RequestMOTD) method() uint16 {
 	return requestUptime
 }
 
-func (RequestUptime) Confidential() bool {
+func (RequestMOTD) Confidential() bool {
 	return false
 }
 
-type ResponseUptime struct {
-	Uptime string
+func (RequestMOTD) requestTag() {}
+
+type ResponseMOTD struct {
+	MOTD string
 }
 
-func (ResponseUptime) method() uint16 {
-	return responseUptime
+func (ResponseMOTD) method() uint16 {
+	return responseMOTD
 }
 
-func (ResponseUptime) Confidential() bool {
+func (ResponseMOTD) Confidential() bool {
 	return false
 }
+
+func (ResponseMOTD) responseTag() {}
 
 // Account related messages
 
@@ -67,6 +74,8 @@ func (RequestSignUp) Confidential() bool {
 	return true
 }
 
+func (RequestSignUp) requestTag() {}
+
 type RequestLogin struct {
 	Username string
 	Password string
@@ -80,6 +89,8 @@ func (RequestLogin) Confidential() bool {
 	return true
 }
 
+func (RequestLogin) requestTag() {}
+
 type ResponseSignedIn struct {
 	Token string
 }
@@ -92,15 +103,7 @@ func (ResponseSignedIn) Confidential() bool {
 	return false
 }
 
-type ErrorUsernameTaken struct{}
-
-func (ErrorUsernameTaken) method() uint16 {
-	return errorUsernameTaken
-}
-
-func (ErrorUsernameTaken) Confidential() bool {
-	return false
-}
+func (ResponseSignedIn) responseTag() {}
 
 // Chat related messages
 type RequestSendChat struct {
@@ -118,6 +121,8 @@ func (RequestSendChat) Confidential() bool {
 	return false
 }
 
+func (RequestSendChat) requestTag() {}
+
 type ResponseMessageSent struct {
 }
 
@@ -128,6 +133,8 @@ func (ResponseMessageSent) method() uint16 {
 func (ResponseMessageSent) Confidential() bool {
 	return false
 }
+
+func (ResponseMessageSent) responseTag() {}
 
 // Chat history related emthods
 type RequestChatHistory struct {
@@ -144,6 +151,8 @@ func (RequestChatHistory) Confidential() bool {
 	return false
 }
 
+func (RequestChatHistory) requestTag() {}
+
 type ResponseChatHistory struct {
 	Chats []struct {
 		To      string
@@ -159,25 +168,18 @@ func (ResponseChatHistory) Confidential() bool {
 	return false
 }
 
-// Generic
-type ErrorAccountNotFound struct{}
+func (ResponseChatHistory) responseTag() {}
 
-func (ErrorAccountNotFound) method() uint16 {
-	return errorAccountNotFound
-}
-
-func (ErrorAccountNotFound) Confidential() bool {
-	return false
-}
-
-type ErrorFailedRead struct {
+type ResponseError struct {
 	Message string
 }
 
-func (ErrorFailedRead) method() uint16 {
-	return errorFailedRead
+func (ResponseError) method() uint16 {
+	return responseError
 }
 
-func (ErrorFailedRead) Confidential() bool {
+func (ResponseError) Confidential() bool {
 	return false
 }
+
+func (ResponseError) responseTag() {}

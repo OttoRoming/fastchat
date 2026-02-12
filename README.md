@@ -32,6 +32,7 @@ length bytes (u32)
 - [x] move fcmul to use int64 instead of int
 - [x] add booleans to fcmul
 - [ ] fix marshaling of strings including special symbols such as '"'
+- [ ] add timeout to fcprotocol requests
 
 # Sources
 
