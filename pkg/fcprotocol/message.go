@@ -176,7 +176,7 @@ func (RequestContacts) method() uint16 {
 
 func (RequestContacts) Confidential() bool { return false }
 
-func (RequestContacts) requestTag()
+func (RequestContacts) requestTag() {}
 
 type ResponseContacts struct {
 	contacts []string
@@ -188,4 +188,4 @@ func (ResponseContacts) method() uint16 {
 
 func (ResponseContacts) Confidential() bool { return false }
 
-func (ResponseContacts) requestTag()
+func (ResponseContacts) requestTag() {}
