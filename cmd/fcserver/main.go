@@ -1,11 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"net"
 	"time"
 
+	"github.com/OttoRoming/fastchat/cmd/fcserver/data"
 	"github.com/OttoRoming/fastchat/pkg/fcprotocol"
+	"github.com/alexedwards/argon2id"
 	"github.com/charmbracelet/log"
 )
 
@@ -15,30 +16,41 @@ const (
 
 var (
 	startTime time.Time
-	data      struct {
-		Users []struct {
-			Username string
-			Possword string
-		}
 
-		Chats []struct {
-			From    string
-			To      string
-			Content string
-		}
+	responseDatabaseError = fcprotocol.ResponseError{
+		Message: "internal database error",
+	}
+	responseServerError = fcprotocol.ResponseError{
+		Message: "internal server error",
 	}
 )
 
-func init() {
-	startTime = time.Now()
-}
+func handleSignup(request *fcprotocol.RequestSignUp) fcprotocol.Response {
+	previousAccount, err := data.GetAccountByUsername(request.Username)
+	if err != nil {
+		log.Error("database error", "err", err)
+		return responseDatabaseError
+	}
+	if previousAccount != nil {
+		return fcprotocol.ResponseError{
+			Message: "account with username already exsists",
+		}
+	}
 
-func getUptimeFormatted() string {
-	elapsed := time.Since(startTime)
-	days, hours, minutes := int(elapsed.Hours())/24, int(elapsed.Hours())%24, int(elapsed.Minutes())%60
-	formattedString := fmt.Sprintf("up %d day, %d hour, %d min", days, hours, minutes)
+	hash, err := argon2id.CreateHash(request.Password, argon2id.DefaultParams)
+	if err != nil {
+		log.Error("failed to hash password", "err", err)
+		return responseServerError
+	}
 
-	return formattedString
+	account, err := data.AddAccount(request.Username, hash)
+	if err != nil {
+		return responseDatabaseError
+	}
+
+	return fcprotocol.ResponseSignedIn{
+		Token: account.Token,
+	}
 }
 
 func handleRequest(request fcprotocol.Request) fcprotocol.Response {
@@ -46,11 +58,13 @@ func handleRequest(request fcprotocol.Request) fcprotocol.Response {
 		log.Info("received request", "request", request)
 	}
 
-	switch request.(type) {
+	switch r := request.(type) {
 	case *fcprotocol.RequestMOTD:
 		return fcprotocol.ResponseMOTD{
 			MOTD: "Welcome to the fcserver",
 		}
+	case *fcprotocol.RequestSignUp:
+		return handleSignup(r)
 	default:
 		return fcprotocol.ResponseError{
 			Message: "unknown request method",
@@ -65,8 +79,8 @@ func handleConnection(conn net.Conn) {
 }
 
 func main() {
-	loadDB()
-	defer db.Close()
+	data.LoadDB()
+	defer data.Close()
 
 	listener, err := net.Listen("tcp", address)
 	if err != nil {
@@ -85,9 +99,4 @@ func main() {
 
 		go handleConnection(conn)
 	}
-
-	// err = listener.Close()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 }
