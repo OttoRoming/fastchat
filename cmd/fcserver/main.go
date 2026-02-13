@@ -25,7 +25,7 @@ var (
 	}
 )
 
-func handleSignup(request *fcprotocol.RequestSignUp) fcprotocol.Response {
+func handleSignUp(request *fcprotocol.RequestSignUp) fcprotocol.Response {
 	previousAccount, err := data.GetAccountByUsername(request.Username)
 	if err != nil {
 		log.Error("database error", "err", err)
@@ -45,7 +45,39 @@ func handleSignup(request *fcprotocol.RequestSignUp) fcprotocol.Response {
 
 	account, err := data.AddAccount(request.Username, hash)
 	if err != nil {
+		log.Error("database error", "err", err)
 		return responseDatabaseError
+	}
+	log.Info("created account", "id", account.ID, "username", account.Username)
+
+	return fcprotocol.ResponseSignedIn{
+		Token: account.Token,
+	}
+}
+
+func handleLogIn(request *fcprotocol.RequestLogin) fcprotocol.Response {
+	account, err := data.GetAccountByUsername(request.Username)
+	if err != nil {
+		return responseDatabaseError
+	}
+	if account == nil {
+		return fcprotocol.ResponseError{
+			Message: "account with username not found",
+		}
+	}
+
+	match, _, err := argon2id.CheckHash(
+		request.Password,
+		account.Password,
+	)
+	if err != nil {
+		log.Error("failed to check password", "err", err)
+		return responseServerError
+	}
+	if !match {
+		return fcprotocol.ResponseError{
+			Message: "incorrect password",
+		}
 	}
 
 	return fcprotocol.ResponseSignedIn{
@@ -64,7 +96,9 @@ func handleRequest(request fcprotocol.Request) fcprotocol.Response {
 			MOTD: "Welcome to the fcserver",
 		}
 	case *fcprotocol.RequestSignUp:
-		return handleSignup(r)
+		return handleSignUp(r)
+	case *fcprotocol.RequestLogin:
+		return handleLogIn(r)
 	default:
 		return fcprotocol.ResponseError{
 			Message: "unknown request method",
