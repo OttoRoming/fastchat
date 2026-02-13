@@ -2,7 +2,6 @@ package main
 
 import (
 	"net"
-	"time"
 
 	"github.com/OttoRoming/fastchat/cmd/fcserver/data"
 	"github.com/OttoRoming/fastchat/pkg/fcprotocol"
@@ -15,8 +14,6 @@ const (
 )
 
 var (
-	startTime time.Time
-
 	responseDatabaseError = fcprotocol.ResponseError{
 		Message: "internal database error",
 	}
@@ -121,8 +118,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	elapsed := time.Since(startTime)
-	log.Info("Server started", "time (µs)", elapsed.Microseconds(), "address", address)
+	log.Info("Server listening", "address", address)
 
 	for {
 		conn, err := listener.Accept()
