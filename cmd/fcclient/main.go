@@ -57,7 +57,7 @@ func selectUser() error {
 func main() {
 	var disclaimerConfirm bool
 	huh.NewConfirm().
-		Title("All traffic (including passwords) are unencrypted. Your traffic using this application will most likely be caputerd and analyzed by your ISP, government agencies, your network administrator and more. Are you sure?").
+		Title("All traffic between client and server (including passwords) are unencrypted. Your traffic using this application will most likely be caputerd and analyzed by your ISP, government agencies, your network administrator and more. Are you sure?").
 		Affirmative("Yes!").
 		Negative("No.").
 		Value(&disclaimerConfirm).Run()
