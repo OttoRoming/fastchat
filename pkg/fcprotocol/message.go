@@ -41,9 +41,7 @@ func (RequestMOTD) method() uint16 {
 	return requestUptime
 }
 
-func (RequestMOTD) Confidential() bool {
-	return false
-}
+func (RequestMOTD) Confidential() bool { return false }
 
 func (RequestMOTD) requestTag() {}
 
@@ -55,9 +53,7 @@ func (ResponseMOTD) method() uint16 {
 	return responseMOTD
 }
 
-func (ResponseMOTD) Confidential() bool {
-	return false
-}
+func (ResponseMOTD) Confidential() bool { return false }
 
 func (ResponseMOTD) responseTag() {}
 
@@ -72,9 +68,7 @@ func (RequestSignUp) method() uint16 {
 	return requestSignUp
 }
 
-func (RequestSignUp) Confidential() bool {
-	return true
-}
+func (RequestSignUp) Confidential() bool { return true }
 
 func (RequestSignUp) requestTag() {}
 
@@ -87,9 +81,7 @@ func (RequestLogin) method() uint16 {
 	return requestLogIn
 }
 
-func (RequestLogin) Confidential() bool {
-	return true
-}
+func (RequestLogin) Confidential() bool { return true }
 
 func (RequestLogin) requestTag() {}
 
@@ -101,9 +93,7 @@ func (ResponseSignedIn) method() uint16 {
 	return responseSignedIn
 }
 
-func (ResponseSignedIn) Confidential() bool {
-	return false
-}
+func (ResponseSignedIn) Confidential() bool { return false }
 
 func (ResponseSignedIn) responseTag() {}
 
@@ -119,9 +109,7 @@ func (RequestSendChat) method() uint16 {
 	return requestSendChat
 }
 
-func (RequestSendChat) Confidential() bool {
-	return false
-}
+func (RequestSendChat) Confidential() bool { return false }
 
 func (RequestSendChat) requestTag() {}
 
@@ -132,9 +120,7 @@ func (ResponseMessageSent) method() uint16 {
 	return responseChatSent
 }
 
-func (ResponseMessageSent) Confidential() bool {
-	return false
-}
+func (ResponseMessageSent) Confidential() bool { return false }
 
 func (ResponseMessageSent) responseTag() {}
 
@@ -149,9 +135,7 @@ func (RequestChatHistory) method() uint16 {
 	return requestChatHistory
 }
 
-func (RequestChatHistory) Confidential() bool {
-	return false
-}
+func (RequestChatHistory) Confidential() bool { return false }
 
 func (RequestChatHistory) requestTag() {}
 
@@ -166,9 +150,7 @@ func (ResponseChatHistory) method() uint16 {
 	return responseChatHistory
 }
 
-func (ResponseChatHistory) Confidential() bool {
-	return false
-}
+func (ResponseChatHistory) Confidential() bool { return false }
 
 func (ResponseChatHistory) responseTag() {}
 
@@ -180,9 +162,7 @@ func (ResponseError) method() uint16 {
 	return responseError
 }
 
-func (ResponseError) Confidential() bool {
-	return false
-}
+func (ResponseError) Confidential() bool { return false }
 
 func (ResponseError) responseTag() {}
 
