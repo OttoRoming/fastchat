@@ -23,11 +23,13 @@ const (
 	requestLogIn
 	requestSendChat
 	requestChatHistory
+	requestContacts
 
 	responseMOTD uint16 = 1<<15 + iota
 	responseSignedIn
 	responseChatSent
 	responseChatHistory
+	responseContacts
 
 	responseError = math.MaxUint16
 )
@@ -183,3 +185,27 @@ func (ResponseError) Confidential() bool {
 }
 
 func (ResponseError) responseTag() {}
+
+type RequestContacts struct {
+	Token string
+}
+
+func (RequestContacts) method() uint16 {
+	return requestContacts
+}
+
+func (RequestContacts) Confidential() bool { return false }
+
+func (RequestContacts) requestTag()
+
+type ResponseContacts struct {
+	contacts []string
+}
+
+func (ResponseContacts) method() uint16 {
+	return responseContacts
+}
+
+func (ResponseContacts) Confidential() bool { return false }
+
+func (ResponseContacts) requestTag()

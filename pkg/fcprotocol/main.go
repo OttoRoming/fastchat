@@ -127,6 +127,8 @@ func ReadMessage(conn net.Conn) (Message, error) {
 		result = &RequestSendChat{}
 	case requestChatHistory:
 		result = &RequestChatHistory{}
+	case requestContacts:
+		result = &RequestContacts{}
 	case responseMOTD:
 		result = &ResponseMOTD{}
 	case responseSignedIn:
@@ -137,6 +139,8 @@ func ReadMessage(conn net.Conn) (Message, error) {
 		result = &ResponseChatHistory{}
 	case responseError:
 		result = &ResponseError{}
+	case responseContacts:
+		result = &ResponseContacts{}
 	default:
 		return nil, fmt.Errorf("unsupported method: %d", packet.Method)
 	}
